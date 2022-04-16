@@ -12,16 +12,18 @@ function Cart() {
 
 	if (!data.me.activeCart) {
 		return (
-			<div className='p-4'>
-				<h1 className='font-bold text-4xl pb-2'>Cart</h1>
-				<div className='text-lg space-x-2 my-3'>The cart is empty</div>
+			<div className='p-4 ml-6 fixed'>
+				<h1 className='font-bold text-3xl pb-4'>Cart</h1>
+				<div className='text-xl space-x-2 my-3 text-gray-400'>
+					The cart is empty
+				</div>
 			</div>
 		);
 	}
 
 	return (
-		<div className='p-4'>
-			<h1 className='font-bold text-4xl pb-2'>Cart</h1>
+		<div className='p-4 ml-6 fixed'>
+			<h1 className='font-bold text-3xl pb-4'>Cart</h1>
 			{data.me.activeCart.lineItems?.map(lineItem => (
 				<div
 					key={lineItem.id}

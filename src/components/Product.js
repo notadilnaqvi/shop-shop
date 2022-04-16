@@ -25,14 +25,14 @@ function Product({ product }) {
 
 	return (
 		<div
-			className='flex flex-row justify-between border-2 rounded-md p-4 shadow-xl'
+			className='flex flex-row justify-between border-2 rounded-md p-4 shadow-lg'
 			key={product.id}
 		>
 			<div className='w-full flex flex-col justify-between'>
-				<p className='font-bold text-xl max-w-[250px]'>
+				<p className='font-bold text-xl'>
 					{product.masterData.current.name}
 				</p>
-				<div className='flex justify-between mr-4 align-middle'>
+				<div className='flex space-x-4 mr-4 align-middle'>
 					<p className='border-2 px-4 py-2 rounded-md font-bold'>
 						&euro;&nbsp;
 						{product.masterData.current.masterVariant.price.value
