@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client';
 
+import Image from 'next/image';
 import { ADD_LINE_ITEM, CREATE_CART, GET_CART } from '@lib/apollo/queries';
 
 function Product({ product }) {
@@ -46,11 +47,12 @@ function Product({ product }) {
 					</button>
 				</div>
 			</div>
-			<div className='border-2 rounded-md'>
-				<img
+			<div className='border-2 rounded-md z-[-1] h-24 w-24 relative'>
+				<Image
 					src={product.masterData.current.masterVariant.images[0].url}
-					alt=''
-					width={120}
+					alt={product.masterData.current.name}
+					layout='fill'
+					className='rounded-md'
 				/>
 			</div>
 		</div>
