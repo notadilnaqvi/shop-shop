@@ -1,7 +1,8 @@
 import { useMutation, useQuery } from '@apollo/client';
 
 import Image from 'next/image';
-import { ADD_LINE_ITEM, CREATE_CART, GET_CART } from '@lib/apollo/queries';
+import { GET_CART } from '@lib/apollo/queries';
+import { ADD_LINE_ITEM, CREATE_CART } from '@lib/apollo/mutations';
 
 function Product({ product }) {
 	const { loading, error, data } = useQuery(GET_CART);

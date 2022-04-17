@@ -1,7 +1,10 @@
+import { useMutation } from '@apollo/client';
+import { LOG_IN_CUSTOMER } from '@lib/apollo/mutations';
 import Link from 'next/link';
 import { useState } from 'react';
 
 function LogIn() {
+	const [logInCustomer] = useMutation(LOG_IN_CUSTOMER);
 	const [form, setForm] = useState({ email: '', password: '' });
 
 	function handleChange(event) {
@@ -13,8 +16,10 @@ function LogIn() {
 
 	async function handleSubmit(event) {
 		event.preventDefault();
-		console.log(form);
-		setForm({ email: '', password: '' });
+		const { data } = await logInCustomer({
+			variables: { draft: form },
+		});
+		console.log(data);
 	}
 
 	return (

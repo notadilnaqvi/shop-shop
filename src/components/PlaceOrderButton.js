@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 
-import { PLACE_ORDER } from '@lib/apollo/queries';
+import { PLACE_ORDER } from '@lib/apollo/mutations';
 
 function PlaceOrderButton({ cart }) {
 	const [placeOrder] = useMutation(PLACE_ORDER);

@@ -1,7 +1,14 @@
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useMutation } from '@apollo/client';
+
+import { SIGN_UP_CUSTOMER } from '@lib/apollo/mutations';
 
 function SignUp() {
+	const router = useRouter();
+	const [signUpCustomer] = useMutation(SIGN_UP_CUSTOMER);
+
 	const [form, setForm] = useState({
 		firstName: '',
 		lastName: '',
@@ -18,13 +25,8 @@ function SignUp() {
 
 	async function handleSubmit(event) {
 		event.preventDefault();
-		console.log(form);
-		setForm({
-			firstName: '',
-			lastName: '',
-			email: '',
-			password: '',
-		});
+		const { data } = await signUpCustomer({ variables: { draft: form } });
+		console.log(data);
 	}
 
 	return (
