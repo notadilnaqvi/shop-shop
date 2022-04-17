@@ -1,9 +1,12 @@
-import { useMutation } from '@apollo/client';
-import { LOG_IN_CUSTOMER } from '@lib/apollo/mutations';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useMutation } from '@apollo/client';
+
+import { LOG_IN_CUSTOMER } from '@lib/apollo/mutations';
 
 function LogIn() {
+	const router = useRouter();
 	const [logInCustomer] = useMutation(LOG_IN_CUSTOMER);
 	const [form, setForm] = useState({ email: '', password: '' });
 
@@ -16,10 +19,11 @@ function LogIn() {
 
 	async function handleSubmit(event) {
 		event.preventDefault();
-		const { data } = await logInCustomer({
+		await logInCustomer({
 			variables: { draft: form },
+			refetchQueries: ['me'],
 		});
-		console.log(data);
+		router.push('/');
 	}
 
 	return (

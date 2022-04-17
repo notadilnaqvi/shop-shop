@@ -1,9 +1,27 @@
-function setLocalStorage(key, val) {
-	if (typeof window !== 'undefined') window.localStorage.setItem(key, val);
+function getTokenFromLocalStorage() {
+	if (typeof window !== 'undefined') {
+		try {
+			return JSON.parse(window.localStorage.getItem('ct-token'));
+		} catch (error) {
+			return null;
+		}
+	}
 }
 
-function getLocalStorage(key) {
-	if (typeof window !== 'undefined') return window.localStorage.getItem(key);
+function setTokenInLocalStorage(token) {
+	if (typeof window !== 'undefined') {
+		window.localStorage.setItem('ct-token', JSON.stringify(token));
+	}
 }
 
-export { setLocalStorage, getLocalStorage };
+function removeTokenFromLocalStorage() {
+	if (typeof window !== 'undefined') {
+		window.localStorage.removeItem('ct-token');
+	}
+}
+
+export {
+	getTokenFromLocalStorage,
+	setTokenInLocalStorage,
+	removeTokenFromLocalStorage,
+};

@@ -47,4 +47,17 @@ const GET_CART = gql`
 	}
 `;
 
-export { GET_ALL_PRODUCTS, GET_CART };
+const GET_CUSTOMER = gql`
+	query me {
+		me {
+			customer {
+				id
+				firstName
+				lastName
+				email
+			}
+		}
+	}
+`;
+
+export { GET_ALL_PRODUCTS, GET_CART, GET_CUSTOMER };

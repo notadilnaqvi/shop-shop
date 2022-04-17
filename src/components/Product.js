@@ -16,7 +16,7 @@ function Product({ product }) {
 			cart = result.data.createMyCart;
 		}
 
-		addLineItem({
+		await addLineItem({
 			variables: {
 				id: cart.id,
 				version: cart.version,

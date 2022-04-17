@@ -6,15 +6,26 @@ import {
 	from,
 } from '@apollo/client';
 
-import tokenProvider from '@lib/commercetools/tokenProvider';
+import generateNewToken from '@lib/commercetools/client';
+import { getTokenFromLocalStorage, setTokenInLocalStorage } from 'src/utils';
 
 const httpLink = new HttpLink({
 	uri: `${process.env.CTP_API_URL}/${process.env.CTP_PROJECT_KEY}/graphql`,
 });
 
 const authMiddleware = new ApolloLink(async (operation, forward) => {
-	const tokenInfo = await tokenProvider.getTokenInfo();
+	const { variables, operationName } = operation;
+	let customerCredentials = null;
+	if (operationName === 'customerSignMeIn') {
+		customerCredentials = variables.draft;
+	}
+	const currentToken = getTokenFromLocalStorage();
+	const tokenInfo = await generateNewToken({
+		currentToken,
+		customerCredentials,
+	});
 	const token = `${tokenInfo.token_type} ${tokenInfo.access_token}`;
+	setTokenInLocalStorage(tokenInfo);
 
 	operation.setContext(({ headers = {} }) => ({
 		headers: {

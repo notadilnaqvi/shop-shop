@@ -25,8 +25,8 @@ function SignUp() {
 
 	async function handleSubmit(event) {
 		event.preventDefault();
-		const { data } = await signUpCustomer({ variables: { draft: form } });
-		console.log(data);
+		await signUpCustomer({ variables: { draft: form } });
+		router.push('/log-in');
 	}
 
 	return (
