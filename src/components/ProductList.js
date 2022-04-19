@@ -12,8 +12,8 @@ function ProductList() {
 
 	return (
 		<div className='w-full'>
-			<h1 className='font-bold text-3xl mb-10'>Summer Collection</h1>
-			<div className='grid grid-flow-row grid-cols-2 gap-10'>
+			<h1 className='font-bold text-2xl mb-8'>Summer Collection 🏖️</h1>
+			<div className='grid grid-flow-row lg:grid-cols-3 md:grid-cols-2 grid-col-1 gap-4'>
 				{data.products.results.map(product => {
 					return <Product product={product} key={product.id} />;
 				})}

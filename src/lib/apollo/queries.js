@@ -34,10 +34,14 @@ const GET_CART = gql`
 			activeCart {
 				id
 				version
+				totalLineItemQuantity
 				lineItems {
 					id
 					name(locale: "en")
 					quantity
+					totalPrice {
+						centAmount
+					}
 				}
 				totalPrice {
 					centAmount
@@ -55,6 +59,7 @@ const GET_CUSTOMER = gql`
 				firstName
 				lastName
 				email
+				createdAt
 			}
 		}
 	}

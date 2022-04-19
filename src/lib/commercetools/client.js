@@ -14,14 +14,11 @@ async function generateNewToken({ currentToken, customerCredentials }) {
 	let tokenInfo;
 	// The order is important here
 	if (customerCredentials) {
-		console.log('using customerPasswordFlow', customerCredentials);
 		const { email: username, password } = customerCredentials;
 		tokenInfo = await sdkAuth.customerPasswordFlow({ username, password });
 	} else if (currentToken) {
-		console.log('using currentToken', currentToken);
 		tokenInfo = currentToken;
 	} else {
-		console.log('using anonymousFlow');
 		tokenInfo = await sdkAuth.anonymousFlow();
 	}
 

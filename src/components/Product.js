@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 
 import Image from 'next/image';
@@ -8,47 +9,49 @@ function Product({ product }) {
 	const { loading, error, data } = useQuery(GET_CART);
 	const [createCart] = useMutation(CREATE_CART);
 	const [addLineItem] = useMutation(ADD_LINE_ITEM);
+	const [disabled, setDisabled] = useState(false);
 
 	async function handleAddProductToCart(id) {
+		setDisabled(true);
 		let cart = data.me.activeCart;
-		if (!cart) {
+		if (!loading && !cart) {
 			const result = await createCart({ refetchQueries: ['me'] });
 			cart = result.data.createMyCart;
 		}
-
 		await addLineItem({
 			variables: {
 				id: cart.id,
 				version: cart.version,
 				productId: id,
 			},
+			refetchQueries: ['me'],
 		});
+		setDisabled(false);
 	}
 
 	return (
 		<div
-			className='flex flex-row justify-between border-2 rounded-md p-4 shadow-lg'
+			className='flex flex-row justify-between border rounded-md p-4'
 			key={product.id}
 		>
 			<div className='w-full flex flex-col justify-between'>
-				<p className='font-bold text-xl'>
-					{product.masterData.current.name}
-				</p>
-				<div className='flex space-x-4 mr-4 align-middle'>
-					<p className='border-2 px-4 py-2 rounded-md font-bold'>
+				<p className='font-bold'>{product.masterData.current.name}</p>
+				<div className='flex space-x-2 mr-4 align-middle'>
+					<p className='border px-2 py-1 rounded-md text-sm'>
 						&euro;&nbsp;
 						{product.masterData.current.masterVariant.price.value
 							.centAmount / 100}
 					</p>
 					<button
+						disabled={disabled}
 						onClick={() => handleAddProductToCart(product.id)}
-						className='bg-blue-400 hover:bg-blue-500 px-4 py-2 rounded-md text-white font-bold active:translate-x-[1px] active:translate-y-[1px]'
+						className='border px-2 py-1 text-sm rounded-md active:translate-x-[1px] active:translate-y-[1px] hover:bg-slate-50'
 					>
-						Add to cart
+						🛒
 					</button>
 				</div>
 			</div>
-			<div className='border-2 rounded-md z-[-1] h-24 w-24 relative'>
+			<div className='border rounded-md z-[-1] h-24 w-24 relative'>
 				<Image
 					src={product.masterData.current.masterVariant.images[0].url}
 					alt={product.masterData.current.name}

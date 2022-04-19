@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useQuery } from '@apollo/client';
 
-import { GET_CUSTOMER } from '@lib/apollo/queries';
+import { GET_CART, GET_CUSTOMER } from '@lib/apollo/queries';
 import { removeTokenFromLocalStorage } from 'src/utils';
 
 function useLogout() {
@@ -19,4 +19,9 @@ function useCustomer() {
 	return { loading, error, data };
 }
 
-export { useLogout, useCustomer };
+function useCart() {
+	const { loading, error, data } = useQuery(GET_CART);
+	return { loading, error, data };
+}
+
+export { useLogout, useCustomer, useCart };

@@ -1,53 +1,52 @@
 import Link from 'next/link';
 
-import { useCustomer, useLogout } from 'src/hooks';
+import { useCart, useCustomer, useLogout } from 'src/hooks';
 
 function Header() {
-	const { data } = useCustomer();
-	const { logout } = useLogout();
+	const { data: cartData } = useCart();
+	const { data: customerData } = useCustomer();
+
+	const isCustomerLoggedIn = customerData?.me?.customer;
+	const productsInCart = cartData?.me?.activeCart?.totalLineItemQuantity;
 
 	return (
-		<header className='fixed w-full text-gray-800 flex justify-center h-20 bg-white tracking-widest border-b-2 px-20'>
+		<header className='fixed w-full text-gray-800 flex justify-center h-14 bg-white tracking-widest border-b px-8'>
 			<nav className='max-w-[1024px] w-full flex h-full font-medium'>
 				{/* Logo */}
 				<div className='h-full mr-auto'>
 					<Link href='/'>
-						<a className='font-bold text-3xl h-full flex items-center'>
+						<a className='font-bold text-xl h-full flex items-center'>
 							Shop-Shop
 						</a>
 					</Link>
 				</div>
 
 				{/* Nav links */}
-				<ul className='hidden md:flex h-full space-x-4'>
-					{data ? (
-						<>
-							<li>
-								<p className='font-normal text-gray-400 h-full flex items-center text-xl transition duration-200 ease-in-out'>
-									Logged in as&nbsp;
-									<span className='font-medium text-gray-600'>
-										{data?.me?.customer?.email}
+				<ul className='flex h-full space-x-4'>
+					<li>
+						<div className='h-full flex items-center'>
+							<span className='relative inline-block border  px-2 py-1 rounded-md  hover:bg-slate-50'>
+								<Link href='/cart'>
+									<a className='font-medium'>🛒</a>
+								</Link>
+								{productsInCart && (
+									<span className='absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full'>
+										{productsInCart}
 									</span>
-								</p>
-							</li>
-							<li>
-								<button
-									className='text-red-500 font-medium h-full flex items-center text-xl transition duration-200 ease-in-out'
-									onClick={logout}
-								>
-									Logout
-								</button>
-							</li>
-						</>
-					) : (
-						<li>
-							<Link href='/log-in'>
-								<a className=' h-full flex items-center text-xl transition duration-200 ease-in-out'>
-									Login
+								)}
+							</span>
+						</div>
+					</li>
+
+					<li>
+						<div className='h-full flex items-center'>
+							<Link href='/account'>
+								<a className='font-medium rounded-md px-2 py-1 border hover:bg-slate-50'>
+									{isCustomerLoggedIn ? '🙎' : '🕵️‍♂️'}
 								</a>
 							</Link>
-						</li>
-					)}
+						</div>
+					</li>
 				</ul>
 			</nav>
 		</header>

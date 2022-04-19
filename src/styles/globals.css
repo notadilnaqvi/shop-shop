@@ -5,3 +5,12 @@
 .debug {
 	@apply border-[1px] border-red-600;
 }
+
+/* Disable weird browser preset */
+input,
+textarea,
+button,
+select,
+a {
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
