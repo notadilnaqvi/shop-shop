@@ -3,14 +3,31 @@ import { useQuery } from '@apollo/client';
 import { GET_CART } from '@lib/apollo/queries';
 import PlaceOrderButton from '@components/PlaceOrderButton';
 
-function CartPage() {
+function Cart() {
 	const { loading, error, data } = useQuery(GET_CART);
 
-	if (loading) return null;
+	if (loading) {
+		return (
+			<div className='text-gray-800 w-full'>
+				<h1 className='font-bold text-2xl mb-8'>Cart</h1>
+				<div className='space-x-2 my-3 text-gray-400'>Loading ⏳</div>
+			</div>
+		);
+	}
 
-	if (error) return <p>{JSON.stringify(error)}</p>;
+	if (error) {
+		console.error('[Cart]:', error);
+		return (
+			<div className='text-gray-800 w-full'>
+				<h1 className='font-bold text-2xl mb-8'>Cart</h1>
+				<div className='space-x-2 my-3 text-gray-400'>
+					Oops. Something went wrong 💀
+				</div>
+			</div>
+		);
+	}
 
-	if (!loading && !data.me.activeCart) {
+	if (!data.me.activeCart) {
 		return (
 			<div className='text-gray-800 w-full'>
 				<h1 className='font-bold text-2xl mb-8'>Cart</h1>
@@ -62,4 +79,4 @@ function CartPage() {
 	);
 }
 
-export default CartPage;
+export default Cart;

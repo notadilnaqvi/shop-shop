@@ -6,7 +6,7 @@ import { GET_CART } from '@lib/apollo/queries';
 import { ADD_LINE_ITEM, CREATE_CART } from '@lib/apollo/mutations';
 
 function Product({ product }) {
-	const { loading, error, data } = useQuery(GET_CART);
+	const { loading, data } = useQuery(GET_CART);
 	const [createCart] = useMutation(CREATE_CART);
 	const [addLineItem] = useMutation(ADD_LINE_ITEM);
 	const [disabled, setDisabled] = useState(false);
@@ -30,10 +30,7 @@ function Product({ product }) {
 	}
 
 	return (
-		<div
-			className='flex flex-row justify-between border rounded-md p-4'
-			key={product.id}
-		>
+		<div className='flex flex-row justify-between border rounded-md p-4'>
 			<div className='w-full flex flex-col justify-between'>
 				<p className='font-bold'>{product.masterData.current.name}</p>
 				<div className='flex space-x-2 mr-4 align-middle'>
@@ -47,7 +44,7 @@ function Product({ product }) {
 						onClick={() => handleAddProductToCart(product.id)}
 						className='border px-2 py-1 text-sm rounded-md active:translate-x-[1px] active:translate-y-[1px] hover:bg-slate-50'
 					>
-						🛒
+						{disabled ? '⏳' : '🛒'}
 					</button>
 				</div>
 			</div>

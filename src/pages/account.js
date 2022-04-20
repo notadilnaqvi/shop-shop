@@ -3,8 +3,31 @@ import { useCustomer, useLogout } from 'src/hooks';
 
 function Account() {
 	const { logout } = useLogout();
-	const { data } = useCustomer();
+	const { data, loading, error } = useCustomer();
 	const isCustomerLoggedIn = data?.me?.customer;
+
+	if (loading) {
+		return (
+			<div className='text-gray-800 w-full'>
+				<h1 className='font-bold text-2xl mb-8'>Account Info</h1>
+				<div className='space-x-2 my-3 text-gray-400'>Loading ⏳</div>
+			</div>
+		);
+	}
+
+	// Commercetools client throws if we try to access the account info endpoint without credentials
+	// That's not really what we can consider an error so we skip the check for now
+	// if (error) {
+	// 	console.error('[Account]:', error);
+	// 	return (
+	// 		<div className='text-gray-800 w-full'>
+	// 			<h1 className='font-bold text-2xl mb-8'>Account Info</h1>
+	// 			<div className='space-x-2 my-3 text-gray-400'>
+	// 				Oops. Something went wrong 💀
+	// 			</div>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<div className='text-gray-800 w-full'>
