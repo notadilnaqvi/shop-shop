@@ -11,12 +11,28 @@ const CREATE_CART = gql`
 	}
 `;
 
+const DELETE_CART = gql`
+	mutation ($id: String!, $version: Long!) {
+		deleteMyCart(id: $id, version: $version) {
+			id
+			version
+		}
+	}
+`;
+
 const ADD_LINE_ITEM = gql`
-	mutation ($id: String!, $version: Long!, $productId: String!) {
+	mutation (
+		$id: String!
+		$version: Long!
+		$productId: String!
+		$quantity: Long
+	) {
 		updateMyCart(
 			id: $id
 			version: $version
-			actions: { addLineItem: { productId: $productId } }
+			actions: {
+				addLineItem: { productId: $productId, quantity: $quantity }
+			}
 		) {
 			id
 			version
@@ -28,6 +44,56 @@ const ADD_LINE_ITEM = gql`
 			totalPrice {
 				centAmount
 			}
+		}
+	}
+`;
+
+const CHANGE_LINE_ITEM_QUANTITY = gql`
+	mutation (
+		$id: String!
+		$version: Long!
+		$productId: String!
+		$quantity: Long!
+	) {
+		updateMyCart(
+			id: $id
+			version: $version
+			actions: {
+				changeLineItemQuantity: {
+					lineItemId: $productId
+					quantity: $quantity
+				}
+			}
+		) {
+			id
+			version
+			lineItems {
+				id
+				name(locale: "en")
+				quantity
+			}
+			totalPrice {
+				centAmount
+			}
+		}
+	}
+`;
+
+const REMOVE_LINE_ITEM = gql`
+	mutation (
+		$id: String!
+		$version: Long!
+		$lineItemId: String!
+		$quantity: Long
+	) {
+		updateMyCart(
+			id: $id
+			version: $version
+			actions: {
+				removeLineItem: { lineItemId: $lineItemId, quantity: $quantity }
+			}
+		) {
+			id
 		}
 	}
 `;
@@ -69,8 +135,11 @@ const SIGN_UP_CUSTOMER = gql`
 
 export {
 	CREATE_CART,
+	DELETE_CART,
 	ADD_LINE_ITEM,
+	REMOVE_LINE_ITEM,
 	PLACE_ORDER,
+	CHANGE_LINE_ITEM_QUANTITY,
 	LOG_IN_CUSTOMER,
 	SIGN_UP_CUSTOMER,
 };

@@ -36,6 +36,7 @@ const GET_CART = gql`
 				version
 				totalLineItemQuantity
 				lineItems {
+					productId
 					id
 					name(locale: "en")
 					quantity

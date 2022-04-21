@@ -16,7 +16,6 @@ function PlaceOrderButton({ cart }) {
 			},
 			refetchQueries: ['me'],
 		});
-		setDisabled(false);
 	}
 
 	return (

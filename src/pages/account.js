@@ -60,7 +60,7 @@ function Account() {
 					</div>
 					<div className='mt-8'>
 						<button
-							className='bg-red-400 hover:bg-red-500 px-2 py-1 rounded-md text-white font-medium'
+							className='border hover:bg-slate-100 px-2 py-1 rounded-md text-red-500 font-medium'
 							onClick={logout}
 						>
 							Logout
@@ -69,7 +69,7 @@ function Account() {
 				</>
 			) : (
 				<>
-					<div className='space-x-2 my-3 text-gray-600'>
+					<div className='space-x-2 my-3 text-gray-400'>
 						You are not logged in
 					</div>
 					<div className='mt-8 flex items-center space-x-4'>

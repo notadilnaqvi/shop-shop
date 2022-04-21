@@ -11,6 +11,10 @@ function Product({ product }) {
 	const [addLineItem] = useMutation(ADD_LINE_ITEM);
 	const [disabled, setDisabled] = useState(false);
 
+	const isItemAlreadyInCart = data?.me?.activeCart?.lineItems
+		?.map(({ productId }) => productId)
+		?.includes(product.id);
+
 	async function handleAddProductToCart(id) {
 		setDisabled(true);
 		let cart = data.me.activeCart;
@@ -26,7 +30,6 @@ function Product({ product }) {
 			},
 			refetchQueries: ['me'],
 		});
-		setDisabled(false);
 	}
 
 	return (
@@ -40,11 +43,11 @@ function Product({ product }) {
 							.centAmount / 100}
 					</p>
 					<button
-						disabled={disabled}
+						disabled={disabled || isItemAlreadyInCart}
 						onClick={() => handleAddProductToCart(product.id)}
-						className='border px-2 py-1 text-sm rounded-md active:translate-x-[1px] active:translate-y-[1px] hover:bg-slate-50'
+						className='border px-2 py-1 text-sm rounded-md hover:bg-slate-50 active:translate-x-[1px] active:translate-y-[1px]'
 					>
-						{disabled ? '⏳' : '🛒'}
+						{isItemAlreadyInCart ? '✅' : '🛒'}
 					</button>
 				</div>
 			</div>

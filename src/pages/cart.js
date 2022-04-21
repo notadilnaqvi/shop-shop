@@ -1,10 +1,76 @@
-import { useQuery } from '@apollo/client';
+import { useState } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
 
 import { GET_CART } from '@lib/apollo/queries';
 import PlaceOrderButton from '@components/PlaceOrderButton';
+import {
+	ADD_LINE_ITEM,
+	CHANGE_LINE_ITEM_QUANTITY,
+	DELETE_CART,
+	REMOVE_LINE_ITEM,
+} from '@lib/apollo/mutations';
 
 function Cart() {
+	const [disabled, setDisabled] = useState(false);
 	const { loading, error, data } = useQuery(GET_CART);
+	const [deleteCart] = useMutation(DELETE_CART);
+	const [changeLineItemQuantity] = useMutation(CHANGE_LINE_ITEM_QUANTITY);
+	const [removeLineItem] = useMutation(REMOVE_LINE_ITEM);
+
+	async function handleDeleteCart(cart) {
+		setDisabled(true);
+		await deleteCart({
+			variables: {
+				id: cart.id,
+				version: cart.version,
+			},
+			refetchQueries: ['me'],
+		});
+		setDisabled(false);
+	}
+
+	async function handleAddItem(item) {
+		setDisabled(true);
+		await changeLineItemQuantity({
+			variables: {
+				id: data.me.activeCart.id,
+				version: data.me.activeCart.version,
+				productId: item.id,
+				quantity: item.quantity + 1,
+			},
+			refetchQueries: ['me'],
+		});
+		setDisabled(false);
+	}
+
+	// Decrement quantity by 1
+	async function handleRemoveItem(item) {
+		setDisabled(true);
+		await removeLineItem({
+			variables: {
+				id: data.me.activeCart.id,
+				version: data.me.activeCart.version,
+				lineItemId: item.id,
+				quantity: 1,
+			},
+			refetchQueries: ['me'],
+		});
+		setDisabled(false);
+	}
+
+	// Remove item altogether
+	async function handleDeleteItem(item) {
+		setDisabled(true);
+		await removeLineItem({
+			variables: {
+				id: data.me.activeCart.id,
+				version: data.me.activeCart.version,
+				lineItemId: item.id,
+			},
+			refetchQueries: ['me'],
+		});
+		setDisabled(false);
+	}
 
 	if (loading) {
 		return (
@@ -27,7 +93,7 @@ function Cart() {
 		);
 	}
 
-	if (!data.me.activeCart) {
+	if (!data.me.activeCart?.totalLineItemQuantity) {
 		return (
 			<div className='text-gray-800 w-full'>
 				<h1 className='font-bold text-2xl mb-8'>Cart</h1>
@@ -54,17 +120,29 @@ function Cart() {
 						<p className='whitespace-nowrap font-medium'>
 							&euro; {lineItem.totalPrice.centAmount / 100}
 						</p>
-						{/* <div className='flex'>
-							<button className='text-xs border py-1 px-2 rounded-l-md hover:bg-slate-50 active:translate-y-[1px]'>
+						<div className='flex'>
+							<button
+								disabled={disabled}
+								className='text-xs border py-1 px-2 rounded-l-md hover:bg-slate-50 active:translate-y-[1px]'
+								onClick={() => handleRemoveItem(lineItem)}
+							>
 								➖
 							</button>
-							<button className='text-xs border-y py-1 px-2 hover:bg-slate-50 active:translate-y-[1px]'>
+							<button
+								disabled={disabled}
+								className='text-xs border-y py-1 px-2 hover:bg-slate-50 active:translate-y-[1px]'
+								onClick={() => handleAddItem(lineItem)}
+							>
 								➕
 							</button>
-							<button className='text-xs border py-1 px-2 rounded-r-md hover:bg-slate-50 active:translate-y-[1px]'>
+							<button
+								disabled={disabled}
+								className='text-xs border py-1 px-2 rounded-r-md hover:bg-slate-50 active:translate-y-[1px]'
+								onClick={() => handleDeleteItem(lineItem)}
+							>
 								❌
 							</button>
-						</div> */}
+						</div>
 					</div>
 				</div>
 			))}
@@ -74,7 +152,16 @@ function Cart() {
 					&euro; {data.me.activeCart.totalPrice?.centAmount / 100}
 				</p>
 			</div>
-			<PlaceOrderButton cart={data.me.activeCart} />
+			<div className='mt-8 flex items-center space-x-4'>
+				<PlaceOrderButton cart={data.me.activeCart} />
+				<button
+					disabled={disabled}
+					className=' hover:bg-slate-100 border px-2 py-1 rounded-md text-red-500 font-medium active:translate-x-[1px] active:translate-y-[1px]'
+					onClick={() => handleDeleteCart(data.me.activeCart)}
+				>
+					Clear cart
+				</button>
+			</div>
 		</div>
 	);
 }
