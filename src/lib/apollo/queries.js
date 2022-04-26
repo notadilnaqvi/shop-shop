@@ -66,4 +66,22 @@ const GET_CUSTOMER = gql`
 	}
 `;
 
-export { GET_ALL_PRODUCTS, GET_CART, GET_CUSTOMER };
+const GET_MY_SHOPPING_LISTS = gql`
+	query me {
+		me {
+			shoppingLists {
+				results {
+					id
+					version
+					lineItems {
+						productId
+						id
+						name(locale: "en")
+					}
+				}
+			}
+		}
+	}
+`;
+
+export { GET_ALL_PRODUCTS, GET_CART, GET_CUSTOMER, GET_MY_SHOPPING_LISTS };

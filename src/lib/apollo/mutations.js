@@ -133,6 +133,59 @@ const SIGN_UP_CUSTOMER = gql`
 	}
 `;
 
+const CREATE_MY_SHOPPING_LIST = gql`
+	mutation {
+		createMyShoppingList(
+			draft: { name: [{ value: "asdf", locale: "en" }] }
+		) {
+			id
+			version
+		}
+	}
+`;
+
+const DELETE_MY_SHOPPING_LIST = gql`
+	mutation ($id: String!, $version: Long!) {
+		deleteMyShoppingList(id: $id, version: $version) {
+			id
+			version
+		}
+	}
+`;
+
+const ADD_LINE_ITEM_TO_MY_SHOPPING_LIST = gql`
+	mutation (
+		$id: String!
+		$version: Long!
+		$productId: String!
+		$quantity: Int
+	) {
+		updateMyShoppingList(
+			id: $id
+			version: $version
+			actions: {
+				addLineItem: { productId: $productId, quantity: $quantity }
+			}
+		) {
+			id
+			version
+		}
+	}
+`;
+
+const REMOVE_LINE_ITEM_FROM_MY_SHOPPING_LIST = gql`
+	mutation ($id: String!, $version: Long!, $lineItemId: String!) {
+		updateMyShoppingList(
+			id: $id
+			version: $version
+			actions: { removeLineItem: { lineItemId: $lineItemId } }
+		) {
+			id
+			version
+		}
+	}
+`;
+
 export {
 	CREATE_CART,
 	DELETE_CART,
@@ -142,4 +195,8 @@ export {
 	CHANGE_LINE_ITEM_QUANTITY,
 	LOG_IN_CUSTOMER,
 	SIGN_UP_CUSTOMER,
+	CREATE_MY_SHOPPING_LIST,
+	DELETE_MY_SHOPPING_LIST,
+	ADD_LINE_ITEM_TO_MY_SHOPPING_LIST,
+	REMOVE_LINE_ITEM_FROM_MY_SHOPPING_LIST,
 };

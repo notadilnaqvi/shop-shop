@@ -120,28 +120,37 @@ function Cart() {
 						<p className='whitespace-nowrap font-medium'>
 							&euro; {lineItem.totalPrice.centAmount / 100}
 						</p>
-						<div className='flex'>
-							<button
-								disabled={disabled}
-								className='text-xs border py-1 px-2 rounded-l-md hover:bg-slate-50 active:translate-y-[1px]'
-								onClick={() => handleRemoveItem(lineItem)}
-							>
-								➖
-							</button>
-							<button
-								disabled={disabled}
-								className='text-xs border-y py-1 px-2 hover:bg-slate-50 active:translate-y-[1px]'
-								onClick={() => handleAddItem(lineItem)}
-							>
-								➕
-							</button>
-							<button
-								disabled={disabled}
-								className='text-xs border py-1 px-2 rounded-r-md hover:bg-slate-50 active:translate-y-[1px]'
-								onClick={() => handleDeleteItem(lineItem)}
-							>
-								❌
-							</button>
+						<div>
+							<div className='flex'>
+								<button
+									disabled={disabled}
+									className='text-xs border py-1 px-2 rounded-l-md hover:bg-slate-50 active:translate-y-[1px]'
+									onClick={() => handleRemoveItem(lineItem)}
+								>
+									➖
+								</button>
+								<button
+									disabled={disabled}
+									className='text-xs border-y py-1 px-2 hover:bg-slate-50 active:translate-y-[1px]'
+									onClick={() => handleAddItem(lineItem)}
+								>
+									➕
+								</button>
+								<button
+									disabled={disabled}
+									className='text-xs border-y border-l py-1 px-2 hover:bg-slate-50 active:translate-y-[1px]'
+									onClick={() => handleDeleteItem(lineItem)}
+								>
+									❌
+								</button>
+								<button
+									disabled={disabled}
+									className='text-xs border py-1 px-2 rounded-r-md hover:bg-slate-50 active:translate-y-[1px]'
+									onClick={() => handleDeleteItem(lineItem)}
+								>
+									❤️
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
