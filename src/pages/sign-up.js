@@ -28,8 +28,8 @@ function SignUp() {
 		event.preventDefault();
 		setDisabled(true);
 		await signUpCustomer({ variables: { draft: form } });
-		setDisabled(false);
-		router.push('/log-in');
+		await new Promise(r => setTimeout(r, 2000)); // TODO: Find proper fix for this hack.
+		window.location = '/';
 	}
 
 	return (

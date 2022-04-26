@@ -28,10 +28,9 @@ function LogIn() {
 		};
 		await logInCustomer({
 			variables: { draft },
-			refetchQueries: ['me'],
 		});
-		setDisabled(false);
-		router.reload();
+		await new Promise(r => setTimeout(r, 2000)); // TODO: Find proper fix for this hack.
+		window.location = '/';
 	}
 
 	return (
