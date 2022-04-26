@@ -11,10 +11,6 @@ function LogIn() {
 	const [disabled, setDisabled] = useState(false);
 	const [logInCustomer] = useMutation(LOG_IN_CUSTOMER);
 	const [form, setForm] = useState({ email: '', password: '' });
-	const { data: customerData } = useCustomer();
-	const isCustomerLoggedIn = customerData?.me?.customer;
-
-	if (isCustomerLoggedIn) router.push('/');
 
 	function handleChange(event) {
 		setForm(prev => ({
