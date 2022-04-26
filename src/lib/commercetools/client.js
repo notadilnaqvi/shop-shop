@@ -1,4 +1,5 @@
 import SdkAuth, { TokenProvider } from '@commercetools/sdk-auth';
+import { getTokenFromLocalStorage, setTokenInLocalStorage } from 'src/utils';
 
 const sdkAuth = new SdkAuth({
 	host: process.env.CTP_AUTH_URL,
@@ -10,21 +11,27 @@ const sdkAuth = new SdkAuth({
 	scopes: process.env.CTP_SCOPES.split(' '),
 });
 
-async function generateNewToken({ currentToken, customerCredentials }) {
-	let tokenInfo;
+async function generateNewToken(customerCredentials) {
+	const currentToken = getTokenFromLocalStorage();
+
 	// The order is important here
+	let tokenFlow;
 	if (customerCredentials) {
 		const { email: username, password } = customerCredentials;
-		tokenInfo = await sdkAuth.customerPasswordFlow({ username, password });
+		tokenFlow = await sdkAuth.customerPasswordFlow({ username, password });
 	} else if (currentToken) {
-		tokenInfo = currentToken;
+		tokenFlow = currentToken;
 	} else {
-		tokenInfo = await sdkAuth.anonymousFlow();
+		tokenFlow = await sdkAuth.anonymousFlow();
 	}
 
-	const tokenProvider = new TokenProvider({ sdkAuth }, tokenInfo);
+	const tokenProvider = new TokenProvider({ sdkAuth }, tokenFlow);
 
-	return tokenProvider.getTokenInfo();
+	const tokenInfo = await tokenProvider.getTokenInfo();
+
+	setTokenInLocalStorage(tokenInfo);
+
+	return tokenInfo;
 }
 
 export default generateNewToken;

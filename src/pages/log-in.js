@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/client';
 
+import { useCustomer } from 'src/hooks';
 import { LOG_IN_CUSTOMER } from '@lib/apollo/mutations';
 
 function LogIn() {
@@ -10,6 +11,10 @@ function LogIn() {
 	const [disabled, setDisabled] = useState(false);
 	const [logInCustomer] = useMutation(LOG_IN_CUSTOMER);
 	const [form, setForm] = useState({ email: '', password: '' });
+	const { data: customerData } = useCustomer();
+	const isCustomerLoggedIn = customerData?.me?.customer;
+
+	if (isCustomerLoggedIn) router.push('/');
 
 	function handleChange(event) {
 		setForm(prev => ({
@@ -21,12 +26,16 @@ function LogIn() {
 	async function handleSubmit(event) {
 		event.preventDefault();
 		setDisabled(true);
+		const draft = {
+			...form,
+			activeCartSignInMode: 'MergeWithExistingCustomerCart', // "MergeWithExistingCustomerCart" or "UseAsNewActiveCustomerCart"
+		};
 		await logInCustomer({
-			variables: { draft: form },
+			variables: { draft },
 			refetchQueries: ['me'],
 		});
 		setDisabled(false);
-		router.push('/');
+		router.reload();
 	}
 
 	return (

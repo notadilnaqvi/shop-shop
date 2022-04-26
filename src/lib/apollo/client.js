@@ -7,7 +7,6 @@ import {
 } from '@apollo/client';
 
 import generateNewToken from '@lib/commercetools/client';
-import { getTokenFromLocalStorage, setTokenInLocalStorage } from 'src/utils';
 
 const httpLink = new HttpLink({
 	uri: `${process.env.CTP_API_URL}/${process.env.CTP_PROJECT_KEY}/graphql`,
@@ -15,17 +14,8 @@ const httpLink = new HttpLink({
 
 const authMiddleware = new ApolloLink(async (operation, forward) => {
 	const { variables, operationName } = operation;
-	let customerCredentials = null;
-	if (operationName === 'customerSignMeIn') {
-		customerCredentials = variables.draft;
-	}
-	const currentToken = getTokenFromLocalStorage();
-	const tokenInfo = await generateNewToken({
-		currentToken,
-		customerCredentials,
-	});
+	const tokenInfo = await generateNewToken();
 	const token = `${tokenInfo.token_type} ${tokenInfo.access_token}`;
-	setTokenInLocalStorage(tokenInfo);
 
 	operation.setContext(({ headers = {} }) => ({
 		headers: {
@@ -34,7 +24,17 @@ const authMiddleware = new ApolloLink(async (operation, forward) => {
 		},
 	}));
 
-	return forward(operation);
+	// Not really sure what this does but fixes the persist issue
+	return forward(operation).map(response => {
+		if (
+			operationName === 'customerSignMeIn' ||
+			operationName === 'customerSignMeUp'
+		) {
+			const customerCredentials = variables.draft;
+			generateNewToken(customerCredentials);
+		}
+		return response;
+	});
 });
 
 const client = new ApolloClient({

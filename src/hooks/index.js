@@ -8,7 +8,7 @@ function useLogout() {
 	const router = useRouter();
 	function logout() {
 		removeTokenFromLocalStorage();
-		router.reload('/');
+		router.reload();
 	}
 
 	return { logout };
