@@ -111,7 +111,7 @@ function SignUp() {
 					</button>
 					<p className='text-gray-400 font-medium'>or</p>
 					<Link href='/log-in'>
-						<a className='font-medium text-blue-400 hover:underline '>
+						<a className='font-medium text-blue-400 underline '>
 							Log In
 						</a>
 					</Link>

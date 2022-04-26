@@ -13,6 +13,7 @@ import {
 	useCreateMyShoppingList,
 	useGetMyShoppingLists,
 } from 'src/hooks/shopping-list';
+import Link from 'next/link';
 
 function Cart() {
 	const [disabled, setDisabled] = useState(false);
@@ -164,7 +165,11 @@ function Cart() {
 					<div className='flex space-x-4'>
 						<p className='font-medium'>{lineItem.quantity}</p>
 						<p className='text-gray-400'>x</p>
-						<p className='font-medium'>{lineItem.name}</p>
+						<Link href={`/products/${lineItem.productId}`}>
+							<a className='font-medium underline'>
+								{lineItem.name}
+							</a>
+						</Link>
 					</div>
 					<div className='flex space-x-4 pl-2'>
 						<p className='whitespace-nowrap font-medium'>

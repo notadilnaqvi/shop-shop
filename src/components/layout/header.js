@@ -30,25 +30,6 @@ function Header() {
 					<ul className='flex h-full space-x-4'>
 						<li>
 							<div className='h-full flex items-center'>
-								<Link href='/shopping-list'>
-									<a
-										className='font-medium  inline-block border  px-2 py-1 rounded-md  hover:bg-slate-50'
-										title='View shopping list'
-									>
-										<span className='relative'>
-											{!!itemsInShoppingList && (
-												<span className='absolute top-[-7px] inline-flex items-center justify-center px-2 py-1 text-xs font-extrabold tracking-tighter leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full'>
-													{itemsInShoppingList}
-												</span>
-											)}
-										</span>
-										❤️
-									</a>
-								</Link>
-							</div>
-						</li>
-						<li>
-							<div className='h-full flex items-center'>
 								<Link href='/cart'>
 									<a
 										className='font-medium  inline-block border  px-2 py-1 rounded-md  hover:bg-slate-50'
@@ -66,6 +47,25 @@ function Header() {
 								</Link>
 							</div>
 						</li>
+						<li>
+							<div className='h-full flex items-center'>
+								<Link href='/shopping-list'>
+									<a
+										className='font-medium  inline-block border  px-2 py-1 rounded-md  hover:bg-slate-50'
+										title='View shopping list'
+									>
+										<span className='relative'>
+											{!!itemsInShoppingList && (
+												<span className='absolute top-[-7px] inline-flex items-center justify-center px-2 py-1 text-xs font-extrabold tracking-tighter leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full'>
+													{itemsInShoppingList}
+												</span>
+											)}
+										</span>
+										❤️
+									</a>
+								</Link>
+							</div>
+						</li>
 
 						<li>
 							<div className='h-full flex items-center'>
@@ -74,7 +74,7 @@ function Header() {
 										className='font-medium rounded-md px-2 py-1 border hover:bg-slate-50'
 										title='View account info'
 									>
-										{isCustomerLoggedIn ? '🧑' : '🕵️‍♂️'}
+										{isCustomerLoggedIn ? '👨‍🎤' : '🕵️‍♂️'}
 									</a>
 								</Link>
 							</div>

@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { ADD_LINE_ITEM, CREATE_CART } from '@lib/apollo/mutations';
 import { GET_CART } from '@lib/apollo/queries';
+import Link from 'next/link';
 import { useState } from 'react';
 import {
 	useDeleteMyShoppingList,
@@ -108,7 +109,11 @@ function ShoppingList() {
 					key={lineItem.id}
 				>
 					<div className='flex space-x-4'>
-						<p className='font-medium'>{lineItem.name}</p>
+						<Link href={`/products/${lineItem.productId}`}>
+							<a className='font-medium underline'>
+								{lineItem.name}
+							</a>
+						</Link>
 					</div>
 					<div className='flex space-x-4 pl-2'>
 						<div>

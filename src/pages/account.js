@@ -80,7 +80,7 @@ function Account() {
 						</Link>
 						<p className='text-gray-400 font-medium'>or</p>
 						<Link href='/sign-up'>
-							<a className='font-medium text-blue-400 hover:underline'>
+							<a className='font-medium text-blue-400 underline'>
 								Sign Up
 							</a>
 						</Link>

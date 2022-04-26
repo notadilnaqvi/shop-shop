@@ -9,6 +9,7 @@ import {
 	useAddItemToMyShoppingList,
 	useGetMyShoppingLists,
 } from 'src/hooks/shopping-list';
+import Link from 'next/link';
 
 function Product({ product }) {
 	const { loading: cartloading, data: cartData } = useQuery(GET_CART);
@@ -82,7 +83,11 @@ function Product({ product }) {
 	return (
 		<div className='flex flex-row justify-between border rounded-md p-4'>
 			<div className='w-full flex flex-col justify-between'>
-				<p className='font-bold'>{product.masterData.current.name}</p>
+				<Link href={`/products/${product.id}`}>
+					<a className='font-bold underline'>
+						{product.masterData.current.name}
+					</a>
+				</Link>
 				<div className='flex space-x-2 mr-4 align-middle'>
 					<p className='border px-2 py-1 rounded-md text-sm'>
 						&euro;&nbsp;
@@ -103,7 +108,7 @@ function Product({ product }) {
 					</button>
 					<button
 						title={
-							isItemAlreadyInCart
+							isItemAlreadyInShoppingList
 								? 'Added to shopping list'
 								: 'Add to shopping list'
 						}

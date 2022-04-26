@@ -7,7 +7,10 @@ import { LOG_IN_CUSTOMER } from '@lib/apollo/mutations';
 function LogIn() {
 	const [disabled, setDisabled] = useState(false);
 	const [logInCustomer] = useMutation(LOG_IN_CUSTOMER);
-	const [form, setForm] = useState({ email: '', password: '' });
+	const [form, setForm] = useState({
+		email: 'test.user@email.com',
+		password: 'asdf.1234',
+	});
 
 	function handleChange(event) {
 		setForm(prev => ({
@@ -81,7 +84,7 @@ function LogIn() {
 					</button>
 					<p className='text-gray-400 font-medium'>or</p>
 					<Link href='/sign-up'>
-						<a className='font-medium text-blue-400 hover:underline'>
+						<a className='font-medium text-blue-400 underline'>
 							Sign Up
 						</a>
 					</Link>
