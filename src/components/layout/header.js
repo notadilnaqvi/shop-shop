@@ -74,7 +74,7 @@ function Header() {
 										className='font-medium rounded-md px-2 py-1 border hover:bg-slate-50'
 										title='View account info'
 									>
-										{isCustomerLoggedIn ? '🙎' : '🕵️‍♂️'}
+										{isCustomerLoggedIn ? '🧑' : '🕵️‍♂️'}
 									</a>
 								</Link>
 							</div>

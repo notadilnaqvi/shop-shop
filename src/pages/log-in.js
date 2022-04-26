@@ -1,13 +1,10 @@
 import Link from 'next/link';
 import { useState } from 'react';
-import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/client';
 
-import { useCustomer } from 'src/hooks';
 import { LOG_IN_CUSTOMER } from '@lib/apollo/mutations';
 
 function LogIn() {
-	const router = useRouter();
 	const [disabled, setDisabled] = useState(false);
 	const [logInCustomer] = useMutation(LOG_IN_CUSTOMER);
 	const [form, setForm] = useState({ email: '', password: '' });
@@ -31,6 +28,17 @@ function LogIn() {
 		});
 		await new Promise(r => setTimeout(r, 2000)); // TODO: Find proper fix for this hack.
 		window.location = '/';
+	}
+
+	if (disabled) {
+		return (
+			<div className='text-gray-800 w-full'>
+				<h1 className='font-bold text-2xl mb-8'>Log In</h1>
+				<div className='space-x-2 my-3 text-gray-400'>
+					Logging in ⏳
+				</div>
+			</div>
+		);
 	}
 
 	return (

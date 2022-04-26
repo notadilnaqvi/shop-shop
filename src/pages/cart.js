@@ -4,11 +4,15 @@ import { useMutation, useQuery } from '@apollo/client';
 import { GET_CART } from '@lib/apollo/queries';
 import PlaceOrderButton from '@components/PlaceOrderButton';
 import {
-	ADD_LINE_ITEM,
 	CHANGE_LINE_ITEM_QUANTITY,
 	DELETE_CART,
 	REMOVE_LINE_ITEM,
 } from '@lib/apollo/mutations';
+import {
+	useAddItemToMyShoppingList,
+	useCreateMyShoppingList,
+	useGetMyShoppingLists,
+} from 'src/hooks/shopping-list';
 
 function Cart() {
 	const [disabled, setDisabled] = useState(false);
@@ -16,6 +20,13 @@ function Cart() {
 	const [deleteCart] = useMutation(DELETE_CART);
 	const [changeLineItemQuantity] = useMutation(CHANGE_LINE_ITEM_QUANTITY);
 	const [removeLineItem] = useMutation(REMOVE_LINE_ITEM);
+	const {
+		data: shoppingListData,
+		loading: shoppingListLoading,
+		error: shoppingListError,
+	} = useGetMyShoppingLists();
+	const { addLineItemToMyShoppingList } = useAddItemToMyShoppingList();
+	const { createMyShoppingList } = useCreateMyShoppingList();
 
 	async function handleDeleteCart(cart) {
 		setDisabled(true);
@@ -72,6 +83,44 @@ function Cart() {
 		setDisabled(false);
 	}
 
+	// Move from cart to shopping list
+	async function moveToShoppingList(item) {
+		setDisabled(true);
+		const shoppingListExists =
+			!!shoppingListData.me.shoppingLists.results.length;
+		let shoppingList;
+
+		if (shoppingListExists) {
+			shoppingList = shoppingListData.me.shoppingLists.results[0];
+		} else {
+			const result = await createMyShoppingList({
+				variables: {
+					draft: {
+						name: 'my-shopping-list',
+					},
+				},
+				refetchQueries: ['me'],
+			});
+			shoppingList = result.data.createMyShoppingList;
+		}
+		await addLineItemToMyShoppingList({
+			variables: {
+				id: shoppingList.id,
+				version: shoppingList.version,
+				productId: item.productId,
+			},
+		});
+		await removeLineItem({
+			variables: {
+				id: data.me.activeCart.id,
+				version: data.me.activeCart.version,
+				lineItemId: item.id,
+			},
+			refetchQueries: ['me'],
+		});
+		setDisabled(false);
+	}
+
 	if (loading) {
 		return (
 			<div className='text-gray-800 w-full'>
@@ -103,6 +152,7 @@ function Cart() {
 			</div>
 		);
 	}
+
 	return (
 		<div className='text-gray-800 w-full'>
 			<h1 className='font-bold text-2xl mb-8'>Cart</h1>
@@ -123,6 +173,7 @@ function Cart() {
 						<div>
 							<div className='flex'>
 								<button
+									title='Remove one item'
 									disabled={disabled}
 									className='text-xs border py-1 px-2 rounded-l-md hover:bg-slate-50 active:translate-y-[1px]'
 									onClick={() => handleRemoveItem(lineItem)}
@@ -130,6 +181,7 @@ function Cart() {
 									➖
 								</button>
 								<button
+									title='Add one item'
 									disabled={disabled}
 									className='text-xs border-y py-1 px-2 hover:bg-slate-50 active:translate-y-[1px]'
 									onClick={() => handleAddItem(lineItem)}
@@ -137,6 +189,7 @@ function Cart() {
 									➕
 								</button>
 								<button
+									title='Delete from cart'
 									disabled={disabled}
 									className='text-xs border-y border-l py-1 px-2 hover:bg-slate-50 active:translate-y-[1px]'
 									onClick={() => handleDeleteItem(lineItem)}
@@ -144,9 +197,10 @@ function Cart() {
 									❌
 								</button>
 								<button
+									title='Move to shopping list'
 									disabled={disabled}
 									className='text-xs border py-1 px-2 rounded-r-md hover:bg-slate-50 active:translate-y-[1px]'
-									onClick={() => handleDeleteItem(lineItem)}
+									onClick={() => moveToShoppingList(lineItem)}
 								>
 									❤️
 								</button>

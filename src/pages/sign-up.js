@@ -1,12 +1,10 @@
 import Link from 'next/link';
 import { useState } from 'react';
-import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/client';
 
 import { SIGN_UP_CUSTOMER } from '@lib/apollo/mutations';
 
 function SignUp() {
-	const router = useRouter();
 	const [disabled, setDisabled] = useState(false);
 	const [signUpCustomer] = useMutation(SIGN_UP_CUSTOMER);
 
@@ -30,6 +28,17 @@ function SignUp() {
 		await signUpCustomer({ variables: { draft: form } });
 		await new Promise(r => setTimeout(r, 2000)); // TODO: Find proper fix for this hack.
 		window.location = '/';
+	}
+
+	if (disabled) {
+		return (
+			<div className='text-gray-800 w-full'>
+				<h1 className='font-bold text-2xl mb-8'>Sign Up</h1>
+				<div className='space-x-2 my-3 text-gray-400'>
+					Signing up ⏳
+				</div>
+			</div>
+		);
 	}
 
 	return (

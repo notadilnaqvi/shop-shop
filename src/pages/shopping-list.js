@@ -1,3 +1,6 @@
+import { useMutation, useQuery } from '@apollo/client';
+import { ADD_LINE_ITEM, CREATE_CART } from '@lib/apollo/mutations';
+import { GET_CART } from '@lib/apollo/queries';
 import { useState } from 'react';
 import {
 	useDeleteMyShoppingList,
@@ -7,6 +10,9 @@ import {
 
 function ShoppingList() {
 	const [disabled, setDisabled] = useState(false);
+	const { loading: cartloading, data: cartData } = useQuery(GET_CART);
+	const [createCart] = useMutation(CREATE_CART);
+	const [addLineItem] = useMutation(ADD_LINE_ITEM);
 	const { data, loading, error } = useGetMyShoppingLists();
 	const { deleteMyShoppingList } = useDeleteMyShoppingList();
 	const { removeLineItemFromMyShoppingList } =
@@ -26,6 +32,31 @@ function ShoppingList() {
 
 	async function handleRemoveLineItemFromMyShoppingList(item) {
 		setDisabled(true);
+		await removeLineItemFromMyShoppingList({
+			variables: {
+				id: data.me.shoppingLists.results[0].id,
+				version: data.me.shoppingLists.results[0].version,
+				lineItemId: item.id,
+			},
+			refetchQueries: ['me'],
+		});
+		setDisabled(false);
+	}
+
+	async function handleMoveLineItemToCart(item) {
+		setDisabled(true);
+		let cart = cartData.me.activeCart;
+		if (!cartloading && !cart) {
+			const result = await createCart({ refetchQueries: ['me'] });
+			cart = result.data.createMyCart;
+		}
+		await addLineItem({
+			variables: {
+				id: cart.id,
+				version: cart.version,
+				productId: item.productId,
+			},
+		});
 		await removeLineItemFromMyShoppingList({
 			variables: {
 				id: data.me.shoppingLists.results[0].id,
@@ -83,6 +114,7 @@ function ShoppingList() {
 						<div>
 							<div className='flex'>
 								<button
+									title='Delete from list'
 									disabled={disabled}
 									className='text-xs border py-1 px-2 rounded-l-md hover:bg-slate-50 active:translate-y-[1px]'
 									onClick={() =>
@@ -94,9 +126,12 @@ function ShoppingList() {
 									❌
 								</button>
 								<button
-									disabled={true}
+									title='Move to cart'
+									disabled={disabled}
 									className='text-xs border border-l-0 py-1 px-2 rounded-r-md hover:bg-slate-50 active:translate-y-[1px]'
-									onClick={() => {}}
+									onClick={() =>
+										handleMoveLineItemToCart(lineItem)
+									}
 								>
 									🛒
 								</button>
